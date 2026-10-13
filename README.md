@@ -136,43 +136,6 @@ The project uses a Python and Django-based web application stack.
 | Render           | Deployment and hosting of the live web application                 |
 | Git and GitHub   | Source-code version control and project collaboration              |
 
-## 🖥️ Application Screenshots
-
-Screenshots of the live application will be added here to demonstrate the user interface and administrative functionality.
-
-### 1. User Interface
-
-#### Home Page
-
-![User Home Page](docs/screenshots/user-home.png)
-
-#### Lost and Found Item Listings
-
-![Lost and Found Listings](docs/screenshots/user-items.png)
-
-#### Report an Item
-
-![Report Item Page](docs/screenshots/user-report-item.png)
-
-#### Item Details and Matching Results
-
-![Item Details and Matching Results](docs/screenshots/user-matching-results.png)
-
-### 2. Admin Dashboard
-
-#### Admin Dashboard Overview
-
-![Admin Dashboard](docs/screenshots/admin-dashboard.png)
-
-#### Item and Record Management
-
-![Admin Item Management](docs/screenshots/admin-item-management.png)
-
-#### User or System Records
-
-![Admin Records](docs/screenshots/admin-records.png)
-
-*Replace these example screenshot files with actual screenshots from your deployed application. Remove any sections that do not correspond to pages available in your project.*
 
 ## 🌐 Live Deployment
 
