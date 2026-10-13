@@ -1,244 +1,307 @@
-# AI-Based Campus Lost-Item Recovery System with Admin Approval Workflow
+# 🎓 AI-Based Campus Lost-Item Recovery System
 
-[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
-[![Django 5.x/6.x](https://img.shields.io/badge/django-6.1-green.svg)](https://www.djangoproject.com/)
-[![Scikit-Learn](https://img.shields.io/badge/scikit--learn-1.8.0-orange.svg)](https://scikit-learn.org/)
-[![Deployment](https://img.shields.io/badge/deploy-Render%20Ready-violet.svg)](https://render.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+An intelligent, web-based platform designed to simplify the process of reporting, discovering, matching, and recovering lost belongings within a campus environment.
 
-An intelligent, secure, database-backed web application engineered for university campuses. Designed as an industry-standard B.Tech Computer Science final-year engineering capstone project.
+**Live Website:** [Campus Recovery AI](https://campus-recovery-ai.onrender.com)
 
----
+## 📌 Project Overview
 
-## 1. System Philosophy & Critical Privacy Invariant
+Losing personal belongings on a college campus can be frustrating, and identifying the rightful owner of a found item can be equally challenging. Traditional lost-and-found processes often depend on manual communication, notice boards, or searching through unorganized reports.
 
-> **CRITICAL ARCHITECTURAL REQUIREMENT:**  
-> **Submitted reports NEVER appear automatically on the public catalog.**  
-> Every submission is saved with a `PENDING` approval status. The embedded AI matching engine evaluates compatibility against counter-reports privately. Campus administrators inspect AI match suggestions, contact reporters, verify evidence against confidential item markings, and approve reports before any sanitized data is published publicly.
+The **AI-Based Campus Lost-Item Recovery System** addresses this problem through a centralized web application where users can report lost and found items and discover potential matches. The system incorporates an intelligent item-matching workflow to help identify possible connections between lost-item reports and found-item reports.
 
----
+The application also provides administrative functionality to support the management and monitoring of the platform.
 
-## 2. Key Capabilities & Workflow Architecture
+The goal is to make campus lost-and-found management more accessible, organized, efficient, and user-friendly.
 
+## 🎯 Objectives
+
+* Provide a centralized platform for reporting lost and found belongings.
+* Help users discover potentially matching lost and found items.
+* Reduce the effort involved in manually searching for misplaced belongings.
+* Maintain organized item information and associated images.
+* Provide an administrative dashboard for managing platform activities.
+* Improve communication and coordination in the campus recovery process.
+
+## ✨ Key Features
+
+### 👤 User Module
+
+* **Lost Item Reporting:** Submit details about belongings that have been lost.
+* **Found Item Reporting:** Register items found on campus to help locate their owners.
+* **Item Information:** Maintain relevant information such as item descriptions, categories, dates, and images, according to the implemented forms.
+* **Potential Match Discovery:** Use the intelligent matching workflow to identify possible matches between lost and found reports.
+* **Item Browsing:** Explore available item reports and relevant details.
+* **Recovery Assistance:** Make it easier for users to identify potentially recoverable belongings.
+
+### 🛡️ Admin Module
+
+* **Administrative Dashboard:** Access an overview of system information and item records.
+* **Item Management:** Manage lost and found reports through the available administrative functionality.
+* **Record Monitoring:** Review the information stored in the application.
+* **Centralized Administration:** Support organized management of campus lost-and-found activities.
+
+*Note: The exact actions available to administrators depend on the permissions and features enabled in the deployed application.*
+
+## 🏗️ System Architecture
+
+The application follows a Django-based web architecture that separates the user interface, application logic, item-matching functionality, and data storage.
+
+```mermaid
+flowchart TD
+    A[Campus Users] --> B[Web Browser]
+    C[Administrator] --> B
+
+    B --> D[Django Web Application]
+
+    D --> E[User Interface]
+    D --> F[Authentication and Access Control]
+    D --> G[Lost and Found Management]
+    D --> H[Intelligent Item Matching]
+
+    E --> I[HTML Templates and Static Assets]
+    G --> J[Django Models and ORM]
+    H --> K[Candidate Match Evaluation]
+
+    J --> L[(SQLite Database)]
+    G --> M[Uploaded Item Images]
+
+    F --> J
+    K --> J
+    D --> N[Admin Interface and Dashboard]
 ```
-   [ Student A: Reports Lost Item ]            [ Student B: Turns In Found Item ]
-                 │                                              │
-                 ▼                                              ▼
-   ┌────────────────────────────────────────────────────────────────────────┐
-   │ 1. PRIVATE SUBMISSION: Saved with PENDING status (Not public)          │
-   │    Confidential details (serials, marks, private contacts) secured     │
-   └───────────────────────────────────┬────────────────────────────────────┘
-                                       │
-                                       ▼
-   ┌────────────────────────────────────────────────────────────────────────┐
-   │ 2. AI MATCHING ENGINE (items/services/ai_matching.py)                 │
-   │    • Scikit-Learn TF-IDF N-gram Lexical Cosine Similarity (45%)        │
-   │    • Category & Subcategory Classification Compatibility (20%)         │
-   │    • Distinctive Brand & Color Token Attribute Overlap (15%)           │
-   │    • Campus Landmark & Zone Spatial Proximity (10%)                    │
-   │    • Chronological Timeline Coherence Analysis (10%)                  │
-   └───────────────────────────────────┬────────────────────────────────────┘
-                                       │
-                                       ▼
-   ┌────────────────────────────────────────────────────────────────────────┐
-   │ 3. CUSTOM ADMIN DASHBOARD & APPROVAL CONSOLE                          │
-   │    • Inspect AI Similarity Score (0-100) and Justification Reasons     │
-   │    • Compare Lost vs Found reports side-by-side                       │
-   │    • Conduct and log student contact attempts (Email, Phone, Desk)     │
-   │    • Action decision: APPROVE, REJECT, or REQUEST INFORMATION         │
-   └───────────────────┬────────────────────────────────────────────────────┘
-                       │
-         ┌─────────────┴────────────────────────┐
-         ▼                                      ▼
-[ Approved: Eligible for              [ Rejected / Needs Info:
-  Sanitized Public Listing ]            Remains strictly hidden; student notified ]
-         │
-         ▼
-[ Student Claims Ownership on Found Item ]
-         │
-         ▼
-[ Admin Compares Claim Evidence vs Confidential Markings ]
-         │
-         ▼
-[ Verified Physical Hand-Off -> Recovery Record & Auto-Archival ]
+
+### Architecture Components
+
+| Component                         | Responsibility                                                                        |
+| --------------------------------- | ------------------------------------------------------------------------------------- |
+| Presentation Layer                | Displays pages, forms, item listings, and dashboards to users.                        |
+| Django Application Layer          | Handles HTTP requests, routing, business logic, and responses.                        |
+| Authentication and Access Control | Supports account-related functionality and permission-controlled access.              |
+| Item Management Module            | Processes and manages lost-item and found-item reports.                               |
+| Intelligent Matching Module       | Evaluates reported item information to identify potential lost-and-found matches.     |
+| Data Access Layer                 | Uses Django models and the ORM to interact with stored records.                       |
+| Database Layer                    | Stores structured application data. The project includes SQLite for database storage. |
+| Media Storage                     | Holds uploaded item images used by the application.                                   |
+| Administrative Interface          | Supports administrative monitoring and management tasks.                              |
+
+## 🔄 System Workflow
+
+```mermaid
+flowchart TD
+    A([Start]) --> B[Open the Web Application]
+    B --> C{User or Administrator?}
+
+    C -->|User| D[Access User Features]
+    D --> E[Report a Lost or Found Item]
+    E --> F[Save Item Details]
+    F --> G[Matching Workflow]
+    G --> H[Identify Potential Matches]
+    H --> I[Review Relevant Item Information]
+    I --> J[Proceed With Recovery]
+
+    C -->|Administrator| K[Access Admin Dashboard]
+    K --> L[Review and Manage Records]
+    L --> M[Monitor Platform Activities]
+
+    J --> N([End])
+    M --> N
 ```
 
----
+### How the Matching Process Works
 
-## 3. Technology Stack
+1. Users submit information about lost or found belongings.
+2. The application stores the submitted information.
+3. The intelligent matching module evaluates relevant item details.
+4. Potentially related lost and found records are identified.
+5. Users can review the available information and follow the application's recovery process.
 
-- **Backend:** Python 3.11+, Django 5.x/6.x, Django ORM, Django REST Framework.
-- **Machine Learning / NLP:** Scikit-Learn (`TfidfVectorizer`, `cosine_similarity`), NumPy.
-- **Database:** SQLite (local development), PostgreSQL (production on Render via `dj-database-url`).
-- **Frontend:** HTML5, Vanilla CSS3 with custom Dark SaaS theme, Bootstrap 5.3, Bootstrap Icons, Chart.js 4.4.
-- **Security:** Strict IDOR protection, CSRF protection, server-side permission decorators, database constraints preventing duplicate match pairs, immutable audit logging.
-- **Production Serving:** WhiteNoise for static assets, Gunicorn for WSGI application serving.
+The matching system is intended to assist recovery by identifying potential matches. A suggested match should not automatically be treated as proof of ownership.
 
----
+## 🧰 Technology Stack
 
-## 4. Default Seed Accounts
+The project uses a Python and Django-based web application stack.
 
-The system comes equipped with a `seed_data` management command providing pre-configured test users across all roles:
+| Technology       | Purpose                                                            |
+| ---------------- | ------------------------------------------------------------------ |
+| Python           | Core programming language and application logic                    |
+| Django           | Web framework, request handling, models, and application structure |
+| Django ORM       | Database operations through Python models                          |
+| SQLite           | Relational database used by the project                            |
+| HTML             | Web page structure                                                 |
+| CSS              | Styling and presentation                                           |
+| JavaScript       | Client-side interactions where implemented                         |
+| Django Templates | Dynamic rendering of application pages                             |
+| Media Files      | Storage of uploaded item images                                    |
+| Render           | Deployment and hosting of the live web application                 |
+| Git and GitHub   | Source-code version control and project collaboration              |
 
-| Role | Username | Password | Email | Details |
-| :--- | :--- | :--- | :--- | :--- |
-| **Admin** | `admin` | `admin12345` | `admin@campus.edu` | Full Administrator & Superuser access |
-| **Staff** | `security_officer` | `officer12345` | `security@campus.edu` | Campus Security Desk Officer |
-| **Student A** | `arjun_patel` | `student12345` | `arjun.p@campus.edu` | Roll No: `CS-2023-042` |
-| **Student B** | `priya_sharma` | `student12345` | `priya.s@campus.edu` | Roll No: `EC-2024-118` |
-| **Student C** | `rahul_verma` | `student12345` | `rahul.v@campus.edu` | Roll No: `ME-2023-089` |
+## 🖥️ Application Screenshots
 
----
+Screenshots of the live application will be added here to demonstrate the user interface and administrative functionality.
 
-## 5. Local Setup & Quickstart Guide
+### 1. User Interface
+
+#### Home Page
+
+![User Home Page](docs/screenshots/user-home.png)
+
+#### Lost and Found Item Listings
+
+![Lost and Found Listings](docs/screenshots/user-items.png)
+
+#### Report an Item
+
+![Report Item Page](docs/screenshots/user-report-item.png)
+
+#### Item Details and Matching Results
+
+![Item Details and Matching Results](docs/screenshots/user-matching-results.png)
+
+### 2. Admin Dashboard
+
+#### Admin Dashboard Overview
+
+![Admin Dashboard](docs/screenshots/admin-dashboard.png)
+
+#### Item and Record Management
+
+![Admin Item Management](docs/screenshots/admin-item-management.png)
+
+#### User or System Records
+
+![Admin Records](docs/screenshots/admin-records.png)
+
+*Replace these example screenshot files with actual screenshots from your deployed application. Remove any sections that do not correspond to pages available in your project.*
+
+## 🌐 Live Deployment
+
+The application is deployed on Render and can be accessed using the following link:
+
+**[Launch Campus Recovery AI](https://campus-recovery-ai.onrender.com)**
+
+The deployed application allows visitors to explore the available features. Some functionality may require authentication or appropriate permissions.
+
+## ⚙️ Run the Project Locally
+
+Follow these steps to run the Django application on your local machine.
 
 ### Prerequisites
-- Python 3.11+ installed
-- Git installed
 
-### Installation Steps
+* Python installed on your system.
+* Git installed on your system.
+* A terminal such as PowerShell, Command Prompt, or a Unix shell.
 
-1. **Clone the repository:**
-   ```bash
-   git clone <repo-url>
-   cd ai-lost-item-recovery
-   ```
-
-2. **Create and activate a virtual environment:**
-   ```bash
-   # Windows (PowerShell)
-   python -m venv venv
-   .\venv\Scripts\Activate.ps1
-
-   # macOS / Linux
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Run migrations:**
-   ```bash
-   python manage.py migrate
-   ```
-
-5. **Seed demo data (Users, categories, reports, AI matches):**
-   ```bash
-   python manage.py seed_data
-   ```
-
-6. **Run the development server:**
-   ```bash
-   python manage.py runserver
-   ```
-   Open your browser at `http://127.0.0.1:8000/`.
-
----
-
-## 6. Running Automated Tests
-
-The application includes an extensive automated test suite covering all security boundaries, ML calculations, and workflow lifecycles:
+### 1. Clone the Repository
 
 ```bash
-python manage.py test items
+git clone <YOUR_GITHUB_REPOSITORY_URL>
+cd <YOUR_PROJECT_DIRECTORY>
 ```
 
-**Verified Test Scenarios (18/18 passing):**
-- Student registration, password hashing, and authentication redirects.
-- Lost and found report creation defaulting to `PENDING` approval status.
-- Verification that pending and rejected reports are excluded from public listings.
-- Insecure Direct Object Reference (IDOR) protection: unapproved reports return `404 Not Found` for unauthorized viewers.
-- AI TF-IDF vectorization and multi-factor similarity score calculation.
-- Validation that AI rejects same-type comparisons (Lost-Lost, Found-Found, or self-comparison).
-- Database unique constraints preventing duplicate report-pair match records.
-- Role-based authorization: regular students accessing admin console receive `403 Permission Denied`.
-- Report approval, rejection, and request-information state-machine transitions.
-- Student contact logger and system audit logging.
-- Ownership claim submission, verification against confidential markings, and physical hand-off recovery creation.
+Replace the placeholders with your actual GitHub repository URL and project directory name.
 
----
+### 2. Create a Virtual Environment
 
-## 7. Render Deployment Guide
+```bash
+python -m venv venv
+```
 
-The codebase is pre-configured for deployment on [Render](https://render.com/).
+Activate it on Windows PowerShell:
 
-### Step 1: Push Code to GitHub
-Push this project to a GitHub repository.
+```powershell
+.\venv\Scripts\Activate.ps1
+```
 
-### Step 2: Create a PostgreSQL Database on Render
-1. In the Render Dashboard, click **New +** > **PostgreSQL**.
-2. Name the database (e.g., `campus-recovery-db`).
-3. Copy the **Internal Database URL**.
+### 3. Install Dependencies
 
-### Step 3: Create a Web Service on Render
-1. Click **New +** > **Web Service** and connect your GitHub repository.
-2. Select runtime: **Python 3**.
-3. Set the build and start commands:
-   - **Build Command:** `./build.sh`
-   - **Start Command:** `gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 3`
-4. Set Environment Variables:
-   - `DEBUG`: `False`
-   - `DJANGO_SECRET_KEY`: `<Generate a random 50+ character string>`
-   - `ALLOWED_HOSTS`: `.onrender.com`
-   - `DATABASE_URL`: `<Your Render PostgreSQL connection URL>`
-   - `CSRF_TRUSTED_ORIGINS`: `https://your-service-name.onrender.com`
-   - `PUBLIC_REPORTS_ENABLED`: `True`
+```bash
+pip install -r requirements.txt
+```
 
-### Step 4: Persistent Disk for Media Files (Optional but Recommended)
-On Render free web services, the local file system is ephemeral. For production persistent image storage:
-1. Under **Disks**, add a Persistent Disk with Mount Path: `/opt/render/project/src/media`.
-2. Or configure AWS S3 / Cloudinary using `django-storages`.
+### 4. Configure Environment Variables
 
-### Step 5: Create Initial Superuser on Render
-In the Render Web Service Shell tab, run:
+If the application requires environment variables, configure them according to the project's settings and deployment configuration. Do not commit secret keys, passwords, or other sensitive values to GitHub.
+
+### 5. Apply Database Migrations
+
+```bash
+python manage.py migrate
+```
+
+### 6. Create an Administrator Account
+
 ```bash
 python manage.py createsuperuser
 ```
-Or execute the automated seed script:
+
+Follow the prompts to create an account if you need access to Django's administrative interface.
+
+### 7. Start the Development Server
+
 ```bash
-python manage.py seed_data
+python manage.py runserver
 ```
 
+Open the local application at:
+
+http://127.0.0.1:8000/
+
+*The commands above assume the repository contains `manage.py` and `requirements.txt` in the current directory. Follow the project's actual configuration if the directory structure or setup requirements differ.*
+
+## 📁 Suggested Documentation Structure
+
+Keep the screenshots organized inside your repository:
+
+```text
+your-project/
+├── README.md
+├── requirements.txt
+├── manage.py
+├── docs/
+│   └── screenshots/
+│       ├── user-home.png
+│       ├── user-items.png
+│       ├── user-report-item.png
+│       ├── user-matching-results.png
+│       ├── admin-dashboard.png
+│       ├── admin-item-management.png
+│       └── admin-records.png
+├── items/
+├── templates/
+├── static/
+└── media/
+```
+
+This is a suggested documentation layout, not a replacement for your actual Django project structure.
+
+## 👩‍💻 Project Team
+
+The project was developed collaboratively by the following team members.
+
+| S. No. | Student ID | Team Member Name          | Role        |
+| -----: | ---------- | ------------------------- | ----------- |
+|      1 | 23BFA05008 | Appal Reddy Gayathri      | Team Lead   |
+|      2 | 23BFA05057 | Chennuri Sampurna Devasri | Team Member |
+|      3 | 23BFA05022 | Ballapuram Vyshnavi       | Team Member |
+|      4 | 23BFA05012 | Arichetty Reddy Sravani   | Team Member |
+|      5 | 23BFA05035 | Bokkisim Devi Sree        | Team Member |
+
+## 🎓 Academic Project
+
+**Project Title:** AI-Based Campus Lost-Item Recovery System
+
+**Domain:** Web Development, Artificial Intelligence, and Intelligent Information Retrieval
+
+**Application Type:** Web-Based Lost-and-Found Management System
+
+**Deployment Platform:** Render
+
+
+These are possible enhancements and should not be interpreted as existing features unless implemented.
+
 ---
 
-## 8. End-to-End Acceptance Scenario Walkthrough
+Developed with dedication by the **AI-Based Campus Lost-Item Recovery System Team**.
 
-Follow these steps to demonstrate the complete lifecycle:
-
-1. **Submit a Lost Item Report:**
-   - Log in as `arjun_patel` (`student12345`).
-   - Go to **Report Lost Item**. Submit a report for a lost *Space Gray iPad Pro* in *Central Library*.
-   - Add confidential marks: *Serial ending in 948; wallpaper is Mountain Lake*.
-   - Confirm the report is created with status `PENDING`.
-2. **Verify Public Privacy:**
-   - Log out or open an incognito window. Visit the public **Home Page** and **Approved Listings**.
-   - Confirm that Arjun's report does **NOT** appear on the public page.
-   - Attempt to access the report URL directly: confirm you receive a `404 Not Found` (IDOR blocked).
-3. **Submit a Compatible Found Item Report:**
-   - Log in as `priya_sharma` (`student12345`).
-   - Submit a found report: *Found Apple iPad in Central Library reading hall*.
-   - Set confidential marks: *Serial ending in 948; mountain wallpaper*.
-4. **AI Matching & Admin Review:**
-   - Log in as `admin` (`admin12345`).
-   - Navigate to the **Admin Console** (`/admin-dashboard/`).
-   - Under **Approval Queue**, inspect Arjun's lost report.
-   - Under **AI Match Review**, observe that the AI engine automatically paired Arjun's and Priya's reports with high similarity score (~85%+), displaying detailed reasons.
-5. **Admin Contact Verification:**
-   - In the report review console, log a contact attempt confirming details with Arjun.
-   - Approve Arjun's and Priya's reports with verified notes.
-6. **Public Visibility Transition:**
-   - Check the public listings again: only approved reports appear now, with confidential marks and private phone numbers stripped.
-7. **Claim & Recovery Completion:**
-   - File an ownership claim on the item.
-   - In the admin console, verify the claim against the confidential marks.
-   - Finalize physical hand-off using the Recovery Form.
-   - The reports transition to `ARCHIVED`, an immutable `RecoveryRecord` is created, and both parties receive notifications.
-
----
-
-## 9. License
-
-Developed for academic and engineering excellence. Released under the MIT License.
+**Live Website:** https://campus-recovery-ai.onrender.com
